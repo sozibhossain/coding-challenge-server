@@ -21,22 +21,31 @@ async function run (){
     try{
         await client.connect();
         const database = client.db('sozib');
-        const postCollection = database.collection('createpost');
+        const sectorsCollection = database.collection('sectors');
+        const addCollection = database.collection('addDocuments');
 
 
         // // Get API
-        app.get('/createpost', async(req, res) =>{
-            const cursor = postCollection.find({});
-            const createpost = await cursor.toArray();
-            res.send(createpost);
+        app.get('/sectors', async(req, res) =>{
+            const cursor = sectorsCollection.find({});
+            const sectors = await cursor.toArray();
+            res.send(sectors);
+        })
+
+
+        // // Save Documents
+        app.get('/addDocuments', async(req, res) =>{
+            const cursor = addCollection.find({});
+            const sectors = await cursor.toArray();
+            res.send(sectors);
         })
 
         // post api
-        app.post('/createpost', async(req, res) =>{
+        app.post('/addDocuments', async(req, res) =>{
             const addpost = req.body;
             console.log('hit the post api', addpost);
 
-            const result = await postCollection.insertOne(addpost);
+            const result = await addCollection.insertOne(addpost);
             console.log(result);
 
             res.json(result)
@@ -44,10 +53,10 @@ async function run (){
 
 
         // Delete API
-        app.delete('/createpost/:id', async(req, res) =>{
+        app.delete('/addDocuments/:id', async(req, res) =>{
             const id = req.params.id;
             const query = {_id:ObjectId(id)};
-            const result = await postCollection.deleteOne(query)
+            const result = await addCollection.deleteOne(query)
             res.json(result);
         });
     }
